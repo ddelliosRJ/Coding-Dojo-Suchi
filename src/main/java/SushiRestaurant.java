@@ -22,8 +22,10 @@ public class SushiRestaurant {
         double Blue = 0.95;
         double Soup = 2.50;
 
+        // Also add order aggregation for optimal lunch menu discount, for group of customers
+
         // Order map for every customer
-        LinkedHashMap<Double, Integer> order1 = new LinkedHashMap<>();
+        LinkedHashMap<Double, Integer> order1 = new LinkedHashMap<>(); // this can be an object
         LinkedHashMap<Double, Integer> order2 = new LinkedHashMap<>();
         LinkedHashMap<Double, Integer> order3 = new LinkedHashMap<>();
         LinkedHashMap<Double, Integer> order4 = new LinkedHashMap<>();
@@ -80,7 +82,11 @@ public class SushiRestaurant {
         double totalCost = 0;
         int resPlates;
         String[] Days = new String[]{"Saturday", "Sunday"};
+<<<<<<< HEAD
         // TODO: do the same with time
+=======
+        // TODO: do the same with time. Create a method to deal with it
+>>>>>>> Add cost calculation and lunch menu.
 
         // Continue as usual if day is Weekend and if time is not between lunch hours
         if (Arrays.asList(Days).contains(Day)) {
