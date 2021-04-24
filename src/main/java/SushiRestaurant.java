@@ -82,11 +82,7 @@ public class SushiRestaurant {
         double totalCost = 0;
         int resPlates;
         String[] Days = new String[]{"Saturday", "Sunday"};
-<<<<<<< HEAD
-        // TODO: do the same with time
-=======
         // TODO: do the same with time. Create a method to deal with it
->>>>>>> Add cost calculation and lunch menu.
 
         // Continue as usual if day is Weekend and if time is not between lunch hours
         if (Arrays.asList(Days).contains(Day)) {
