@@ -54,15 +54,15 @@ public class CustomerOrder {
             double cost = Math.round((plateNumber * plateCost) * 100.0) / 100.0;
             totalCost += cost;
 
-            System.out.println("Plate Cost: Guest " + guestNumber + " got " + plateNumber + " " + plateType + " plate(s) and paid " + cost + "fr.");
+            System.out.println("⚪ Plate Cost: Guest " + guestNumber + " got " + plateNumber + " " + plateType + " plate(s) and paid " + cost + "fr.");
 
         }
         double tc = totalCost + lunchMenu;
 
         if (lunchMenu != 0) {
-            System.out.println("TOTAL COST: Guest " + guestNumber + " got lunch menu and " + totalPlates + " plate(s) and paid for his order " + tc + "fr.\n");
+            System.out.println("⚫ TOTAL COST: Guest " + guestNumber + " got lunch menu and " + totalPlates + " plate(s) and paid for his order " + tc + "fr.\n");
         } else
-            System.out.println("TOTAL COST: Guest " + guestNumber + " got " + totalPlates + " plate(s) and paid for his order " + tc + "fr.\n");
+            System.out.println("⚫ TOTAL COST: Guest " + guestNumber + " got " + totalPlates + " plate(s) and paid for his order " + tc + "fr.\n");
     }
 
     private static boolean isLunch(String day, double time) {

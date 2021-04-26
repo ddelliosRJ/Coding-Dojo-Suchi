@@ -30,9 +30,9 @@ public class SushiRestaurant {
         Scanner scanner = new Scanner(System.in);
         // Welcome to our sushi restaurant
         // -- user input
-        System.out.println("***********************************");
-        System.out.println("* Welcome to our Sushi Restaurant *");
-        System.out.println("***********************************\n");
+        System.out.println("*************************************");
+        System.out.println("\uD83D\uDC09 Welcome to our Sushi Restaurant \uD83D\uDC09");
+        System.out.println("*************************************\n");
 
         System.out.println("Available plates for today:\n");
         System.out.println("\t" + ANSI_WHITE + "1. Grey\t\t - " + GREY + "fr" + ANSI_RESET);
@@ -66,10 +66,10 @@ public class SushiRestaurant {
             List<Plate> totalOrder = new ArrayList<>();
             for (int i = 1; i <= customerNumber; i++) {
 
-                System.out.println("Hint: At any time, type 'done' to finish the order");
                 List<Plate> plateList = new ArrayList<>();
                 System.out.println("Please place order for customer " + i);
                 System.out.println("Select type and amount of plates (type 'plate type' 'plate amount'. Example: Yellow 2):");
+                System.out.println("\033[3mHint: At any time, type 'done' to finish the order.\033[0m\n");
                 while (true) {
                     String type = scanner.next();
                     if ("done".equals(type)) {
