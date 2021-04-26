@@ -1,3 +1,5 @@
+package com.sushi.restaurant;
+
 public class Plate {
 
     private double price;
