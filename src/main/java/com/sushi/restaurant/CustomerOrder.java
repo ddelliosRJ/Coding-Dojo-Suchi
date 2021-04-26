@@ -31,10 +31,10 @@ public class CustomerOrder {
         // Check if customer selected day and time and if he is eligible for lunch menu
         if (day != null || time != null) {
             if (isLunch(day, time)) {
-                lunchMenu = 8.50;
                 // Check if customer order has soup or one of the lunch items. Else customer can't get a lunch menu
                 if (hasSoup(order) || hasMenuItems(order)) {
                     createLunchMenu(order);
+                    lunchMenu = 8.50;
                 }
             }
         }
@@ -73,12 +73,12 @@ public class CustomerOrder {
         // Continue as usual if day is Weekend and if time is not between lunch hours
         if (weekend.contains(day)) {
 
-            System.out.println("Sorry, lunch menu is only available from Monday to Friday");
+            System.out.println("Sorry, lunch menu is only available from Monday to Friday!");
             return false;
 
         } else if (!isBetweenTime(time)) {
 
-            System.out.println("Sorry, lunch menu is only available from 11:00 to 17:00");
+            System.out.println("Sorry, lunch menu is only available from 11:00 to 17:00!");
             return false;
         }
 
@@ -186,6 +186,23 @@ public class CustomerOrder {
 
     // TODO: try and calculate optimized costs if I have the time. Right now, we can't calculate combined menus from different or the same customer.
     private static void createCombinedLunchMenu(List<Plate> order) {
+
+        /** Algorithm to calculate combined menus
+         *
+         * To calculate combined cost, first scan combined order for eligible menus.
+
+            Calculate eligible menus as follows:
+                Total Plates mod 5 = number of possible menus
+
+         * Set counter to possible menus
+         * Scan order for soups
+                If number of soups is equal to possible menus, begin removing plates from order
+                else remove soup, reduce counter and scan for red or blue. Do the same as before.
+                Continue when counter is zero
+        * Remove plates from menu equal to 4 * possible menus. Eg if we can get 2 lm, we must remove 8 plates from the menu
+            and so on.
+        * This can be combined to createLunchMenu method.
+        */
     }
 
     private static void combinedOrderCost(List<Plate> order, int guestNumber, String day, Double time) {

@@ -6,6 +6,14 @@ import java.util.*;
 
 public class SushiRestaurant {
 
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_GREEN = "\u001B[32m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_BLUE = "\u001B[34m";
+    public static final String ANSI_PURPLE = "\u001B[35m";
+    public static final String ANSI_WHITE = "\u001B[37m";
+
     // Define available plates from conveyor belt as static variables
     private static final double Grey = 4.95;
     private static final double Green = 3.95;
@@ -26,6 +34,21 @@ public class SushiRestaurant {
         System.out.println("***********************************");
         System.out.println("* Welcome to our Sushi Restaurant *");
         System.out.println("***********************************\n");
+
+        System.out.println("Available plates for today:\n");
+        System.out.println("\t" + ANSI_WHITE  + "1. Grey\t\t - "  + Grey   + "fr" + ANSI_RESET);
+        System.out.println("\t" + ANSI_GREEN  + "2. Green\t - "   + Green  + "fr" + ANSI_RESET);
+        System.out.println("\t" + ANSI_YELLOW + "3. Yellow\t - "  + Yellow + "fr" + ANSI_RESET);
+        System.out.println("\t" + ANSI_RED    + "4. Red\t\t - "   + Red    + "fr" + ANSI_RESET);
+        System.out.println("\t" + ANSI_BLUE   + "5. Blue\t\t - "  + Blue   + "fr" + ANSI_RESET);
+        System.out.println("\t" + ANSI_PURPLE + "6. Soup\t\t - "  + Soup   + "fr" + ANSI_RESET + "\n");
+        System.out.println("Lunch menu is also available from Monday to Friday, 11.00 to 16.59!");
+        System.out.println("-------------------------------------------------------------------");
+        System.out.println("You can get:\n");
+        System.out.println(" - 1 " + ANSI_PURPLE + "Soup" + ANSI_RESET + " and 4 plates or");
+        System.out.println(" - 5 plates with at least 1 " + ANSI_BLUE + "Blue" + ANSI_RESET +" or " + ANSI_RED + "Red" + ANSI_RESET + "\n");
+        System.out.println("for a fixed price of only 8.50fr");
+        System.out.println("-------------------------------------------------------------------\n");
 
         System.out.println("Do you want to enter order or go through ready examples? (type order or examples)");
         String choice = scanner.nextLine();
