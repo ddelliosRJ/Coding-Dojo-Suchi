@@ -54,15 +54,15 @@ public class CustomerOrder {
             double cost = Math.round((plateNumber * plateCost) * 100.0) / 100.0;
             totalCost += cost;
 
-            System.out.println("Guest " + guestNumber + " got " + plateNumber + " " + plateType + " plate(s) and paid " + cost + "fr.");
+            System.out.println("Plate Cost: Guest " + guestNumber + " got " + plateNumber + " " + plateType + " plate(s) and paid " + cost + "fr.");
 
         }
         double tc = totalCost + lunchMenu;
 
         if (lunchMenu != 0) {
-            System.out.println("Guest " + guestNumber + " got lunch menu and " + totalPlates + " plate(s) and paid for his order " + tc + "fr.\n");
+            System.out.println("TOTAL COST: Guest " + guestNumber + " got lunch menu and " + totalPlates + " plate(s) and paid for his order " + tc + "fr.\n");
         } else
-            System.out.println("Guest " + guestNumber + " got " + totalPlates + " plate(s) and paid for his order " + tc + "fr.\n");
+            System.out.println("TOTAL COST: Guest " + guestNumber + " got " + totalPlates + " plate(s) and paid for his order " + tc + "fr.\n");
     }
 
     private static boolean isLunch(String day, double time) {
@@ -136,9 +136,9 @@ public class CustomerOrder {
     private static void createLunchMenu(List<Plate> order) {
 
         // Set vars
-        double pN;
-        int tP = 0;
-        int rP;
+        double plateNumber;
+        int totalPlates = 0;
+        int remainingPlates;
 
         // Check if customer order does not have soup or any of the dishes
         if (hasSoup(order)) {
@@ -161,13 +161,13 @@ public class CustomerOrder {
         // Loop through order and remove first four plates
         for (Plate p : updatedMenu) {
             // get number of plates
-            pN = p.amount();
+            plateNumber = p.amount();
             // calculate total plates until now
-            tP += pN;
+            totalPlates += plateNumber;
             // calculate remaining plates
-            rP = tP - 4;
+            remainingPlates = totalPlates - 4;
 
-            if (rP <= 0) {
+            if (remainingPlates <= 0) {
                 order.remove(p);
             } else {
                 // get plate position in original order
@@ -175,7 +175,7 @@ public class CustomerOrder {
                 // remove plate
                 order.remove(p);
                 // set new amount and add updated plate to order
-                p.setAmount(rP);
+                p.setAmount(remainingPlates);
                 order.add(pos, p);
                 break;
             }
