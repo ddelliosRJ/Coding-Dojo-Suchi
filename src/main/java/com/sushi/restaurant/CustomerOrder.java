@@ -14,12 +14,15 @@ public class CustomerOrder {
 
     private final Double time;
 
-    public CustomerOrder(List<Plate> order, int guestNumber, String day, Double time) {
+    private final boolean isSingle;
+
+    public CustomerOrder(List<Plate> order, int guestNumber, String day, Double time, boolean isSingle) {
 
         this.order = order;
         this.guestNumber = guestNumber;
         this.day = day;
         this.time = time;
+        this.isSingle = isSingle;
     }
 
     public void orderCost() {
@@ -33,8 +36,16 @@ public class CustomerOrder {
             if (isLunch(day, time)) {
                 // Check if customer order has soup or one of the lunch items. Else customer can't get a lunch menu
                 if (hasSoup(order) || hasMenuItems(order)) {
-                    createLunchMenu(order);
-                    lunchMenu = 8.50;
+                    if (isSingle) {
+                        createLunchMenu(order);
+                        lunchMenu = 8.50;
+                    } else {
+                        int nofPlates = platesCount(order);
+                        createCombinedLunchMenu(order);
+                        int sum = (nofPlates - platesCount(order)) / 5;
+                        lunchMenu = 8.50 * sum;
+                    }
+
                 }
             }
         }
@@ -42,9 +53,9 @@ public class CustomerOrder {
         for (Plate plate : order) {
 
             // get price
-            double plateCost = plate.price();
+            double plateCost = plate.getPrice();
             // get number of plates
-            int plateNumber = plate.amount();
+            int plateNumber = plate.getAmount();
             // get plate type
             String plateType = plate.type();
             // calculate total plates until now
@@ -144,15 +155,15 @@ public class CustomerOrder {
         if (hasSoup(order)) {
             Plate plate = order.get(soupPos(order));
             order.remove(plate);
-            if (plate.amount() > 1) {
-                plate.setAmount(1);
-                order.add(plate);
+            if (plate.getAmount() > 1) {
+                plate.setAmount(plate.getAmount() - 1); // remove one soup
+                order.add(plate); // add updated plate to the menu again
             }
         } else if (hasMenuItems(order)) {
             Plate plate = order.get(menuItemsPos(order));
             order.remove(plate);
-            if (plate.amount() > 1) {
-                plate.setAmount(1);
+            if (plate.getAmount() > 1) {
+                plate.setAmount(plate.getAmount() - 1);
                 order.add(plate);
             }
         }
@@ -161,27 +172,24 @@ public class CustomerOrder {
         // Loop through order and remove first four plates
         for (Plate p : updatedMenu) {
             // get number of plates
-            plateNumber = p.amount();
+            plateNumber = p.getAmount();
             // calculate total plates until now
             totalPlates += plateNumber;
             // calculate remaining plates
             remainingPlates = totalPlates - 4;
 
-            if (remainingPlates <= 0) {
-                order.remove(p);
-            } else {
-                // get plate position in original order
-                int pos = order.indexOf(p);
-                // remove plate
-                order.remove(p);
-                // set new amount and add updated plate to order
-                p.setAmount(remainingPlates);
-                order.add(pos, p);
-                break;
-            }
+            if (hasRemainingPlates(order, p, remainingPlates)) break;
 
         }
 
+    }
+
+    private static int platesCount(List<Plate> order) {
+        int c = 0;
+        for (Plate p : order) {
+            c += p.getAmount();
+        }
+        return c;
     }
 
     // TODO: try and calculate optimized costs if I have the time. Right now, we can't calculate combined menus from different or the same customer.
@@ -192,19 +200,123 @@ public class CustomerOrder {
          * To calculate combined cost, first scan combined order for eligible menus.
 
             Calculate eligible menus as follows:
-                Total Plates mod 5 = number of possible menus
+            Total Plates mod 5 = number of possible menus
 
          * Set counter to possible menus
          * Scan order for soups
-                If number of soups is equal to possible menus, begin removing plates from order
-                else remove soup, reduce counter and scan for red or blue. Do the same as before.
-                Continue when counter is zero
-        * Remove plates from menu equal to 4 * possible menus. Eg if we can get 2 lm, we must remove 8 plates from the menu
-            and so on.
-        * This can be combined to createLunchMenu method.
-        */
+
+            If number of soups is equal to possible menus, begin removing plates from order
+            else remove soup, reduce counter and scan for red or blue. Do the same as before.
+            Continue when counter is zero
+
+         * Remove plates from menu equal to 4 * possible menus. Eg if we can get 2 lm, we must remove 8 plates from the menu
+         and so on.
+         */
+        // Find possible menus and left plates
+        int possibleMenus = (platesCount(order) / 5);
+        int leftPlates = (platesCount(order) % 5);
+        if (leftPlates == 0) {
+            System.out.println("Combined order can include " + possibleMenus + " menus and has no plates left");
+        } else {
+            System.out.println("Combined order can include " + possibleMenus + " menus and has " + leftPlates + "plates left");
+        }
+        int counter = 0;
+        int leftMenuItems;
+
+        // Check if customer order does not have soup or any of the dishes
+        if (hasSoup(order)) {
+            // Find last soup position in combined order
+            Plate plate = order.get(soupPos(order));
+            // If number of soups is equal to the number of possible menus, remove plate from order and set counter to zero
+            if (plate.getAmount() == possibleMenus) {
+                order.remove(plate);
+                counter = 0;
+                // else set updated soup amount to order
+            } else if (plate.getAmount() < possibleMenus) {
+                order.remove(plate);
+                leftMenuItems = possibleMenus - plate.getAmount();
+                counter = leftMenuItems;
+
+            } else {
+                order.remove(plate);
+                plate.setAmount(plate.getAmount() - possibleMenus);
+                order.add(plate);
+                counter = 0;
+            }
+        }
+
+        // if not all required menu plates were found in the previous check from soups, check for Red or Blue plates.
+        if (counter != 0 && hasMenuItems(order)) {
+            Plate plate = order.get(menuItemsPos(order));
+            if (plate.getAmount() == counter) {
+                order.remove(plate);
+                counter = 0;
+
+            } else if (plate.getAmount() < counter) {
+                order.remove(plate);
+                leftMenuItems = counter - plate.getAmount();
+                counter = leftMenuItems;
+                if (hasMenuItems(order)){
+                    Plate newPlate = order.get(menuItemsPos(order));
+                    if (newPlate.getAmount() > counter) {
+                        order.remove(newPlate);
+                        newPlate.setAmount(newPlate.getAmount() - 1); // remove one of the other plates
+                        order.add(newPlate);
+                        counter = 0;
+                    } else if (newPlate.getAmount() == counter) {
+                        order.remove(newPlate);
+                        counter = 0;
+                    } else {
+                        order.remove(newPlate);
+                        counter = counter - newPlate.getAmount();
+                    }
+
+                }
+
+            } else {
+                order.remove(plate);
+                plate.setAmount(plate.getAmount() - counter);
+                order.add(plate);
+                counter = 0;
+            }
+        }
+
+        List<Plate> updatedCombinedMenu = new ArrayList<>(order);
+        int platestoRemove;
+        if (counter == 0) {
+            platestoRemove = possibleMenus * 4;
+        }
+        else {
+            platestoRemove = counter * 4;
+        }
+
+        for (Plate p : updatedCombinedMenu) {
+            // calculate total plates until now
+            int totalPlates = p.getAmount();
+            // calculate remaining plates
+            int remainingPlates = totalPlates - platestoRemove;
+
+            if (hasRemainingPlates(order, p, remainingPlates)) break;
+
+        }
+
+
     }
 
-    private static void combinedOrderCost(List<Plate> order, int guestNumber, String day, Double time) {
+    private static boolean hasRemainingPlates(List<Plate> order, Plate p, int remainingPlates) {
+        if (remainingPlates <= 0) {
+            order.remove(p);
+        } else {
+            // get plate position in original order
+            int pos = order.indexOf(p);
+            // remove plate
+            order.remove(p);
+            // set new amount and add updated plate to order
+            p.setAmount(remainingPlates);
+            order.add(pos, p);
+            return true;
+        }
+        return false;
     }
+
 }

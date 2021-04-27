@@ -11,7 +11,7 @@ public class Plate {
         this.amount = amount;
     }
 
-    public double price() {
+    public double getPrice() {
         return price;
     }
 
@@ -19,7 +19,7 @@ public class Plate {
         price = newPrice;
     }
 
-    public int amount() {
+    public int getAmount() {
         return amount;
     }
 
